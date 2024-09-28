@@ -5,10 +5,7 @@ function showNotes(){
     if (localStorage.getItem('notes')) {
         notesContainer.innerHTML = localStorage.getItem('notes');
         addDeleteFunctionality(); 
-        const editableNotes = document.querySelectorAll('.input-box');
-        editableNotes.forEach(note =>{
-        note.addEventListener('input', updateStorage);
-})
+        addInputFunctionality();
     }
 };
 showNotes();
@@ -49,6 +46,11 @@ function addDeleteFunctionality(){
         })
     });
 }
-
+function addInputFunctionality(){
+    const editableNotes = document.querySelectorAll('.input-box');
+    editableNotes.forEach(note =>{
+    note.addEventListener('input', updateStorage);
+})
+}
 
 
