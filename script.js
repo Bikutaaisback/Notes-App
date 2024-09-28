@@ -1,42 +1,54 @@
+const createBtn = document.getElementById ('btn');
 const notesContainer = document.querySelector('.notes-container');
-const createBtn = document.querySelector('.btn');
-let notes = document.querySelectorAll('.input-box');
 
 function showNotes(){
-    notesContainer.innerHTML = localStorage.getItem('notes');
-}
+    if (localStorage.getItem('notes')) {
+        notesContainer.innerHTML = localStorage.getItem('notes');
+        addDeleteFunctionality(); 
+        const editableNotes = document.querySelectorAll('.input-box');
+        editableNotes.forEach(note =>{
+        note.addEventListener('input', updateStorage);
+})
+    }
+};
 showNotes();
+
+
+function createNotes(){
+    let notes = document.createElement('P');
+    notes.className = 'input-box';
+    notes.setAttribute('contenteditable', 'true');
+
+    let del = document.createElement('IMG');
+    del.src = 'images/delete.png';
+
+    notes.appendChild(del);
+    notesContainer.appendChild(notes);
+
+
+    del.addEventListener('click', ()=>{
+        del.parentElement.remove();
+        updateStorage();
+    });
+
+    
+    notes.addEventListener('input', updateStorage);
+    updateStorage();
+};
+createBtn.addEventListener('click', createNotes);
 
 function updateStorage(){
     localStorage.setItem('notes', notesContainer.innerHTML);
 }
-
-createBtn.addEventListener('click', ()=>{
-    let inputBox = document.createElement ('p');
-    let img = document.createElement('img');
-    inputBox.className= 'input-box';
-    inputBox.setAttribute('contenteditable', 'true');
-    img.src ='images/delete.png';
-    notesContainer.appendChild(inputBox).appendChild(img);
-})
-
-notesContainer.addEventListener('click', function(e){
-    if(e.target.tagName === 'IMG'){
-        e.target.parentElement.remove()
-        updateStorage()
-    }
-    else if(e.target.tagName == 'P'){
-        notes= document.querySelectorAll('.input-box')
-        notes.forEach(nt => {
-            nt.onkeyup = function(){
-                updateStorage();
-            }
+function addDeleteFunctionality(){
+    let notes = document.querySelectorAll('.input-box img');
+    notes.forEach(del =>{
+        del.addEventListener('click', ()=>{
+            del.parentElement.remove();
+            updateStorage();
         })
-    }
-})
-document.addEventListener('keydown', event =>{
-    if(event.key == 'Enter'){
-        document.execCommand('insertLineBreak');
-        event.preventDefault;
-    }
-})
+    });
+}
+
+
+
